@@ -12,6 +12,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "quietbatchargparser.h"
 #include "qnapicommand.h"
 
@@ -27,8 +28,8 @@ QVariant QuietBatchArgParser::parse(const QStringList& args,
   }
 }
 
-Maybe<CliArgParser::HelpInfo> QuietBatchArgParser::helpInfo() const {
-  return just(
+std::optional<CliArgParser::HelpInfo> QuietBatchArgParser::helpInfo() const {
+  return std::make_optional(
       HelpInfo{"-q", "--quiet", "",
                tr("Download subtitles silently without showing any messages")});
 }

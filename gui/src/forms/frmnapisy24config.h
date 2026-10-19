@@ -25,7 +25,7 @@ class frmNapisy24Config : public QDialog {
 
  public:
   frmNapisy24Config(const EngineConfig &config, QWidget *parent = 0,
-                    Qt::WindowFlags f = 0);
+                    Qt::WindowFlags f = Qt::WindowFlags{});
   ~frmNapisy24Config() {}
 
   EngineConfig getConfig() const;

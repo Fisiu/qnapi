@@ -15,7 +15,7 @@
 #ifndef SUBTITLEDOWNLOADENGINEMETADATA_H
 #define SUBTITLEDOWNLOADENGINEMETADATA_H
 
-#include <Maybe.h>
+#include <optional>
 
 #include <QString>
 
@@ -23,14 +23,14 @@ class SubtitleDownloadEngineMetadata {
  private:
   QString name_;
   QString description_;
-  Maybe<QUrl> registrationUrl_;
-  Maybe<QUrl> uploadUrl_;
+  std::optional<QUrl> registrationUrl_;
+  std::optional<QUrl> uploadUrl_;
 
  public:
   SubtitleDownloadEngineMetadata(const QString& name,
                                  const QString& description,
-                                 const Maybe<QUrl>& registrationUrl,
-                                 const Maybe<QUrl>& uploadUrl)
+                                 const std::optional<QUrl>& registrationUrl,
+                                 const std::optional<QUrl>& uploadUrl)
       : name_(name),
         description_(description),
         registrationUrl_(registrationUrl),
@@ -38,8 +38,8 @@ class SubtitleDownloadEngineMetadata {
 
   QString name() const { return name_; }
   QString description() const { return description_; }
-  Maybe<QUrl> registrationUrl() const { return registrationUrl_; }
-  Maybe<QUrl> uploadUrl() const { return uploadUrl_; }
+  std::optional<QUrl> registrationUrl() const { return registrationUrl_; }
+  std::optional<QUrl> uploadUrl() const { return uploadUrl_; }
 };
 
 #endif

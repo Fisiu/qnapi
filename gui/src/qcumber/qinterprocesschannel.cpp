@@ -112,7 +112,7 @@ void QInterProcessChannel::sendMessage(const QString &s) {
     \brief Send a message to server instance
 */
 void QInterProcessChannel::sendMessage(const QByteArray &msg) {
-  if (!pServer && msg.count()) {
+  if (!pServer && !msg.isEmpty()) {
     // qDebug("Sending msg : %s", msg.constData());
 
     QTcpSocket *pSocket = new QTcpSocket(this);

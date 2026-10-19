@@ -12,6 +12,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "showhelpargparser.h"
 #include "qnapicommand.h"
 
@@ -27,6 +28,6 @@ QVariant ShowHelpArgParser::parse(const QStringList& args,
   }
 }
 
-Maybe<CliArgParser::HelpInfo> ShowHelpArgParser::helpInfo() const {
-  return just(HelpInfo{"-h", "--help", "", tr("Show help text")});
+std::optional<CliArgParser::HelpInfo> ShowHelpArgParser::helpInfo() const {
+  return std::make_optional(HelpInfo{"-h", "--help", "", tr("Show help text")});
 }

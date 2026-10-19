@@ -12,10 +12,12 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "engines/subtitledownloadengine.h"
 #include <QDir>
 #include <QFlags>
 #include <QLoggingCategory>
+#include <QRandomGenerator>
 #include "subconvert/subtitleformatsregistry.h"
 
 SubtitleDownloadEngine::SubtitleDownloadEngine(const QString& tmpPath)
@@ -34,11 +36,11 @@ void SubtitleDownloadEngine::clearSubtitlesList() {
   subtitlesList.clear();
 }
 
-Maybe<SubtitleInfo> SubtitleDownloadEngine::resolveById(QUuid id) {
+std::optional<SubtitleInfo> SubtitleDownloadEngine::resolveById(QUuid id) {
   foreach (SubtitleInfo s, subtitlesList) {
-    if (s.id == id) return just(s);
+    if (s.id == id) return std::make_optional(s);
   }
-  return nothing();
+  return std::nullopt;
 }
 
 void SubtitleDownloadEngine::updateSubtitleInfo(const SubtitleInfo& si) {
@@ -51,12 +53,7 @@ void SubtitleDownloadEngine::updateSubtitleInfo(const SubtitleInfo& si) {
 }
 
 QString SubtitleDownloadEngine::generateTmpFileName() const {
-  static bool gen_inited;
-  if (!gen_inited) {
-    qsrand(time(0));
-    gen_inited = true;
-  }
-  return QString("QNapi.%1.tmp").arg(qrand());
+  return QString("QNapi.%1.tmp").arg(QRandomGenerator::global()->generate());
 }
 
 QString SubtitleDownloadEngine::generateTmpPath() const {

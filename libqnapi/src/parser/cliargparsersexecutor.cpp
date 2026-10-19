@@ -12,11 +12,14 @@
 **
 *****************************************************************************/
 
+#include <optional>
+#include <variant>
+#include <utility>
 #include "cliargparsersexecutor.h"
 
 namespace CliArgParsersExecutor {
 
-Either<QString, Maybe<CliArgParser::ParsedCommand>> executeParsers(
+ExecutionResult executeParsers(
     const QList<QSharedPointer<CliArgParser>> &parsers, const QStringList &args,
     const QNapiConfig &config) {
   QNapiConfig refinedConfig = config;
@@ -25,19 +28,21 @@ Either<QString, Maybe<CliArgParser::ParsedCommand>> executeParsers(
     auto result = cliArgParser->parse(args, refinedConfig);
 
     if (result.canConvert<CliArgParser::ParseError>()) {
-      return some(result.value<CliArgParser::ParseError>().errorMessage);
+      return ExecutionResult(std::in_place_index<0>,
+                             result.value<CliArgParser::ParseError>()
+                                 .errorMessage);
     } else if (result.canConvert<CliArgParser::ParsedCommand>()) {
-      Maybe<CliArgParser::ParsedCommand> maybeParsedCommand =
-          just(result.value<CliArgParser::ParsedCommand>());
-      return some(maybeParsedCommand);
+      auto maybeParsedCommand =
+          std::make_optional(result.value<CliArgParser::ParsedCommand>());
+      return ExecutionResult(std::in_place_index<1>,
+                             std::move(maybeParsedCommand));
     } else if (result.canConvert<CliArgParser::ParsedModifier>()) {
       refinedConfig =
           result.value<CliArgParser::ParsedModifier>().refinedConfig;
     }
   }
 
-  Maybe<CliArgParser::ParsedCommand> n = nothing();
-  return some(n);
+  return ExecutionResult(std::in_place_index<1>, std::nullopt);
 }
 
 QStringList formatHelpLines(const QList<QSharedPointer<CliArgParser>> &parsers,

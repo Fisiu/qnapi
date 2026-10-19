@@ -15,6 +15,8 @@
 
 #include "qmanagedrequest.h"
 
+#include <QRegularExpression>
+
 /*!
     \file qmanagedrequest.cpp
 
@@ -62,7 +64,7 @@ QManagedRequest QManagedRequest::fromString(const QString& s) {
 
 QStringList QManagedRequest::splitArguments(const QString& s) {
   int i = -1;
-  QStringList d, l = s.split(QRegExp("\\s"));
+  QStringList d, l = s.split(QRegularExpression("\\s"));
 
   while (++i < l.count()) {
     if (l.at(i).startsWith("\"")) {
@@ -95,7 +97,7 @@ QByteArray QManagedRequest::joinArguments(const QString& cmd,
   foreach (QString a, l) {
     if (a.isEmpty()) continue;
 
-    if (a.contains(QRegExp("\\s"))) a = "\"" + a + "\"";
+    if (a.contains(QRegularExpression("\\s"))) a = "\"" + a + "\"";
 
     msg += " ";
     msg += a.toUtf8();

@@ -1,8 +1,8 @@
 TEMPLATE = app
 
-CONFIG += warn_on qt resources silent c++11 console
+CONFIG += warn_on qt resources silent c++17 console
 
-QT += core network xml
+QT += core network xml core5compat
 QT -= gui
 
 SOURCES += src/main.cpp \
@@ -34,8 +34,6 @@ macx {
     QT_CONFIG -= no-pkg-config
     CONFIG -= app_bundle
     LIBS += -framework CoreFoundation
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.8
-    QMAKE_CXXFLAGS_X86_64 = -mmacosx-version-min=10.8
 }
 
 !win32 {

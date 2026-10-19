@@ -12,6 +12,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "qnapi.h"
 #include "libqnapi.h"
 #include "subtitlematcher.h"
@@ -19,9 +20,10 @@
 
 #include "config/configreader.h"
 
-#include <QtAlgorithms>
+#include <algorithm>
 
-QNapi::QNapi(const QNapiConfig& config, const Maybe<QString>& specificEngine)
+QNapi::QNapi(const QNapiConfig& config,
+             const std::optional<QString>& specificEngine)
     : enginesRegistry(LibQNapi::subtitleDownloadEngineRegistry()),
       config(config) {
   if (specificEngine) {
@@ -109,10 +111,10 @@ QList<SubtitleInfo> QNapi::listSubtitles() {
     return 2;
   };
 
-  qStableSort(subtitlesList.begin(), subtitlesList.end(),
-              [&](const SubtitleInfo& si1, const SubtitleInfo& si2) {
-                return langRank(si1.lang) < langRank(si2.lang);
-              });
+  std::stable_sort(subtitlesList.begin(), subtitlesList.end(),
+                   [&](const SubtitleInfo& si1, const SubtitleInfo& si2) {
+                     return langRank(si1.lang) < langRank(si2.lang);
+                   });
 
   return subtitlesList;
 }

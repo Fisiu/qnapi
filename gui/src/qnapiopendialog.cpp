@@ -13,6 +13,7 @@
 *****************************************************************************/
 
 #include "qnapiopendialog.h"
+#include "utils/windowutils.h"
 #include "libqnapi.h"
 
 QNapiOpenDialog::QNapiOpenDialog(QWidget* parent, const QString& caption,
@@ -102,7 +103,8 @@ bool QNapiOpenDialog::selectDirectory() {
 #else
   if (!placeWindow()) return false;
   // QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks ?
-  setFileMode(QFileDialog::DirectoryOnly);
+  setFileMode(QFileDialog::Directory);
+  setOption(QFileDialog::ShowDirsOnly, true);
   return exec();
 #endif
 }
@@ -117,9 +119,7 @@ bool QNapiOpenDialog::placeWindow() {
     return false;
   }
 
-  QRect position = frameGeometry();
-  position.moveCenter(QDesktopWidget().availableGeometry().center());
-  move(position.topLeft());
+  centerOnPrimaryScreen(*this);
 
   return true;
 }

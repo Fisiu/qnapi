@@ -1,4 +1,4 @@
-QT += network xml
+QT += network xml core5compat
 QT -= gui
 
 TARGET = qnapi
@@ -7,14 +7,11 @@ TEMPLATE = lib
 CONFIG += staticlib \
           warn_on \
           silent \
-          c++11
+          c++17
 
 DESTDIR = $$PWD
 
 INCLUDEPATH += $$PWD/src
-
-include(../deps/libmaia/maia.pri)
-include(../deps/qt-maybe/qt-maybe.pri)
 
 UI_DIR = tmp
 MOC_DIR = tmp
@@ -133,8 +130,6 @@ unix:!macx {
 
 macx {
     INCLUDEPATH += ../deps/libmediainfo/include
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.8
-    QMAKE_CXXFLAGS_X86_64 = -mmacosx-version-min=10.8
 }
 
 win32 {

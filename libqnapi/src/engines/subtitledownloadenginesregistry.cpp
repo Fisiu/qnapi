@@ -12,6 +12,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "subtitledownloadenginesregistry.h"
 
 #include "engines/napiprojektdownloadengine.h"
@@ -20,7 +21,6 @@
 
 #include "utils/p7zipdecoder.h"
 
-#include <Maybe.h>
 
 #include <QPair>
 
@@ -52,7 +52,7 @@ SubtitleDownloadEngineMetadata SubtitleDownloadEnginesRegistry::engineMetadata(
   if (engineName == Napisy24DownloadEngine::metadata.name())
     return Napisy24DownloadEngine::metadata;
 
-  return SubtitleDownloadEngineMetadata("", "", nothing(), nothing());
+  return SubtitleDownloadEngineMetadata("", "", std::nullopt, std::nullopt);
 }
 
 const char *const *SubtitleDownloadEnginesRegistry::enginePixmapData(

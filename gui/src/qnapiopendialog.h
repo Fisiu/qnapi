@@ -17,7 +17,6 @@
 
 #include "config/staticconfig.h"
 
-#include <QDesktopWidget>
 #include <QDir>
 #include <QFileDialog>
 #include <QFileInfo>

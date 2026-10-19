@@ -15,14 +15,11 @@
 #ifndef SUBTITLEDOWNLOADENGINE_H
 #define SUBTITLEDOWNLOADENGINE_H
 
+#include <optional>
 #include <QFile>
 #include <QFileInfo>
 #include <QString>
 #include <QUrl>
-
-#include <ctime>
-
-#include <Maybe.h>
 
 #include "subtitleinfo.h"
 
@@ -57,7 +54,7 @@ class SubtitleDownloadEngine {
 
   SubtitleDownloadEngine(const QString& tmpPath);
 
-  Maybe<SubtitleInfo> resolveById(QUuid id);
+  std::optional<SubtitleInfo> resolveById(QUuid id);
   void updateSubtitleInfo(const SubtitleInfo& si);
 
   QString generateTmpFileName() const;

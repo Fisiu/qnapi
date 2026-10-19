@@ -15,7 +15,7 @@
 #ifndef __FRMCONVERT_H__
 #define __FRMCONVERT_H__
 
-#include <Maybe.h>
+#include <optional>
 #include <QDialog>
 #include <QSharedPointer>
 #include "config/postprocessingconfig.h"
@@ -27,7 +27,7 @@
 class frmConvert : public QDialog {
   Q_OBJECT
  public:
-  frmConvert(QWidget *parent = 0, Qt::WindowFlags f = 0);
+  frmConvert(QWidget *parent = 0, Qt::WindowFlags f = Qt::WindowFlags{});
   ~frmConvert() {}
 
  private:
@@ -40,7 +40,7 @@ class frmConvert : public QDialog {
   QString srcFormat, targetFormat;
 
   void checkFPSNeeded();
-  Maybe<QString> determineMovieFPS(const QString &defaultMovieFilePath);
+  std::optional<QString> determineMovieFPS(const QString &defaultMovieFilePath);
   void generateTargetFileName();
 
  private slots:

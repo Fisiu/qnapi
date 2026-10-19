@@ -393,14 +393,6 @@
     </message>
 </context>
 <context>
-    <name>MaiaObject</name>
-    <message>
-        <location filename="../deps/libmaia/maiaObject.cpp" line="288"/>
-        <source>parse error: invalid xml-rpc. not conforming to spec.</source>
-        <translation>błąd parsowania: niepoprawny xml-rpc. niezgodny ze specyfikacją.</translation>
-    </message>
-</context>
-<context>
     <name>QNapiApp</name>
     <message>
         <location filename="../gui/src/qnapiapp.cpp" line="92"/>

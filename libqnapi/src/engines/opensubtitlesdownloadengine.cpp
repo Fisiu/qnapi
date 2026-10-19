@@ -12,6 +12,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "opensubtitlesdownloadengine.h"
 #include "subtitlelanguage.h"
 
@@ -25,8 +26,8 @@ SubtitleDownloadEngineMetadata OpenSubtitlesDownloadEngine::metadata =
     SubtitleDownloadEngineMetadata(
         "OpenSubtitles",
         QObject::tr("<b>www.opensubtitles.org</b> subtitles download engine"),
-        just(QUrl("http://www.opensubtitles.org/newuser")),
-        just(QUrl("http://www.opensubtitles.org/upload")));
+        std::make_optional(QUrl("http://www.opensubtitles.org/newuser")),
+        std::make_optional(QUrl("http://www.opensubtitles.org/upload")));
 
 OpenSubtitlesDownloadEngine::OpenSubtitlesDownloadEngine(
     const QString& tmpPath, const EngineConfig& config,
@@ -117,10 +118,9 @@ bool OpenSubtitlesDownloadEngine::lookForSubtitles(QString lang) {
                QFileInfo(responseMap["SubFileName"].toString())
                    .completeBaseName()) {
       r = SUBTITLE_GOOD;
-    } else if (QRegExp(QString("^%1").arg(
-                           responseMap["MovieReleaseName"].toString()),
-                       Qt::CaseInsensitive)
-                   .exactMatch(QFileInfo(movie).completeBaseName())) {
+    } else if (QFileInfo(movie).completeBaseName().compare(
+                   responseMap["MovieReleaseName"].toString(),
+                   Qt::CaseInsensitive) == 0) {
       r = SUBTITLE_GOOD;
     }
 
@@ -144,7 +144,7 @@ QList<SubtitleInfo> OpenSubtitlesDownloadEngine::listSubtitles() {
 }
 
 bool OpenSubtitlesDownloadEngine::download(QUuid id) {
-  Maybe<SubtitleInfo> ms = resolveById(id);
+  std::optional<SubtitleInfo> ms = resolveById(id);
 
   if (!ms) return false;
 
@@ -187,7 +187,7 @@ bool OpenSubtitlesDownloadEngine::download(QUuid id) {
 }
 
 bool OpenSubtitlesDownloadEngine::unpack(QUuid id) {
-  Maybe<SubtitleInfo> ms = resolveById(id);
+  std::optional<SubtitleInfo> ms = resolveById(id);
   if (!ms) return false;
 
   if (!QFile::exists(movie)) return false;

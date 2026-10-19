@@ -15,34 +15,23 @@
 #ifndef SYNCXMLRPC_H
 #define SYNCXMLRPC_H
 
-#include <QEventLoop>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QObject>
-#include "maiaXmlRpcClient.h"
+#include <QString>
+#include <QUrl>
+#include <QVariant>
 
-class SyncXmlRpc : public QObject {
-  Q_OBJECT
+class SyncXmlRpc {
  public:
-  SyncXmlRpc(const QUrl& endPoint);
+  explicit SyncXmlRpc(const QUrl& endPoint);
 
   bool request(const QString& method, const QVariantList& args);
   QVariant getResponse() const;
   QVariant getError() const;
 
- private slots:
-
-  void whenResponse(QVariant& response);
-
-  void whenFault(int err, const QString& msg);
-
  private:
-  bool result;
-  int error;
+  QUrl endPoint;
+  int error = 0;
   QString message;
   QVariant resp;
-  QEventLoop loop;
-  MaiaXmlRpcClient rpc;
 };
 
-#endif
+#endif  // SYNCXMLRPC_H

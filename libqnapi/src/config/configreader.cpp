@@ -18,6 +18,7 @@
 #include <QFileInfo>
 #include <QLocale>
 #include <QProcess>
+#include <QRegularExpression>
 #include "subtitlelanguage.h"
 
 ConfigReader::ConfigReader(
@@ -105,7 +106,7 @@ const QList<QPair<QString, bool>> ConfigReader::readEnabledEngines(
     QList<QPair<QString, bool>> enabledEngines;
     foreach (QString engineEnableStr, enabledEnginesStr) {
       QStringList engineParts =
-          engineEnableStr.split(":", QString::SkipEmptyParts);
+          engineEnableStr.split(":", Qt::SkipEmptyParts);
       if (engineParts.size() != 2) {
         return defaultEnabledEngines;
       }
@@ -172,7 +173,9 @@ const GeneralConfig ConfigReader::resolveP7zipPath(
 #else
 
     QString pathEnv =
-        QProcess::systemEnvironment().filter(QRegExp("^PATH=(.*)$")).value(0);
+        QProcess::systemEnvironment()
+            .filter(QRegularExpression("^PATH=(.*)$"))
+            .value(0);
     QStringList sysPaths = pathEnv.mid(5).split(":");
     sysPaths.removeAll("");
     sysPaths.append(".");

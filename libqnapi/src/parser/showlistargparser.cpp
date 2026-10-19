@@ -12,6 +12,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "showlistargparser.h"
 #include "qnapicommand.h"
 
@@ -28,7 +29,7 @@ QVariant ShowListArgParser::parse(const QStringList& args,
   }
 }
 
-Maybe<CliArgParser::HelpInfo> ShowListArgParser::helpInfo() const {
-  return just(HelpInfo{"-s", "--show-list", "",
+std::optional<CliArgParser::HelpInfo> ShowListArgParser::helpInfo() const {
+  return std::make_optional(HelpInfo{"-s", "--show-list", "",
                        tr("Always show a list of available subtitles")});
 }

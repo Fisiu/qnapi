@@ -12,6 +12,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "clisubtitlesdownloader.h"
 #include "qnapi.h"
 
@@ -115,7 +116,7 @@ void printSubtitlesList(const Console& c, QNapi& napi) {
   }
 }
 
-Maybe<int> selectSubtitles(const Console& c, const QNapiConfig& config,
+std::optional<int> selectSubtitles(const Console& c, const QNapiConfig& config,
                            QNapi& napi) {
   bool showList = false;
   bool napiShowList = napi.needToShowList();
@@ -129,7 +130,7 @@ Maybe<int> selectSubtitles(const Console& c, const QNapiConfig& config,
   }
 
   if (!showList) {
-    return just(napi.bestIdx());
+    return std::make_optional(napi.bestIdx());
   } else {
     QList<SubtitleInfo> subtitlesList = napi.listSubtitles();
 
@@ -137,9 +138,9 @@ Maybe<int> selectSubtitles(const Console& c, const QNapiConfig& config,
     int selIdx = c.inputNumber(tr("Select subtitles to download: "), 0,
                                subtitlesList.size());
     if (selIdx == 0) {
-      return nothing();
+      return std::nullopt;
     } else {
-      return just(selIdx - 1);
+      return std::make_optional(selIdx - 1);
     }
   }
 }
@@ -197,7 +198,7 @@ int downloadForMovie(const Console& c, const QString& movieFilePath, int i,
     return EC_SUBTITLES_NOT_FOUND;
   }
 
-  Maybe<int> selIdx = selectSubtitles(c, config, napi);
+  std::optional<int> selIdx = selectSubtitles(c, config, napi);
 
   if (selIdx) {
     return finishSubtitles(selIdx.value(), c, napi);

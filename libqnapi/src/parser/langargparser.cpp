@@ -12,6 +12,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "langargparser.h"
 #include "subtitlelanguage.h"
 
@@ -45,7 +46,7 @@ QVariant LangArgParser::parse(const QStringList& args,
   }
 }
 
-Maybe<CliArgParser::HelpInfo> LangArgParser::helpInfo() const {
-  return just(
+std::optional<CliArgParser::HelpInfo> LangArgParser::helpInfo() const {
+  return std::make_optional(
       HelpInfo{"-l", "--lang", tr("code"), tr("Preferred subtitles language")});
 }

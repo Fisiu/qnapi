@@ -16,7 +16,6 @@
 #define __FRMABOUT__H__
 
 #include <QDesktopServices>
-#include <QDesktopWidget>
 #include <QUrl>
 
 #include "ui_frmabout.h"
@@ -24,7 +23,7 @@
 class frmAbout : public QDialog {
   Q_OBJECT
  public:
-  frmAbout(QWidget *parent = 0, Qt::WindowFlags f = 0);
+  frmAbout(QWidget *parent = 0, Qt::WindowFlags f = Qt::WindowFlags{});
   ~frmAbout() {}
 
  private:

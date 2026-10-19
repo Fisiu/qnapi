@@ -15,6 +15,8 @@
 #ifndef CLIARGPARSERSEXECUTOR_H
 #define CLIARGPARSERSEXECUTOR_H
 
+#include <optional>
+#include <variant>
 #include "config/qnapiconfig.h"
 #include "parser/cliargparser.h"
 #include "tr.h"
@@ -23,14 +25,15 @@
 #include <QMetaType>
 #include <QSharedPointer>
 #include <QString>
-#include "Either.h"
-#include "Maybe.h"
 
 namespace CliArgParsersExecutor {
 
 Q_DECLARE_NAMESPACE_TR(CliArgParsersExecutor)
 
-Either<QString, Maybe<CliArgParser::ParsedCommand>> executeParsers(
+using ExecutionResult =
+    std::variant<QString, std::optional<CliArgParser::ParsedCommand>>;
+
+ExecutionResult executeParsers(
     const QList<QSharedPointer<CliArgParser>> &parsers, const QStringList &args,
     const QNapiConfig &config);
 

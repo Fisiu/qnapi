@@ -14,12 +14,13 @@
 
 #include "mpl2.h"
 
+#include <QRegularExpression>
+
 bool MPL2SubtitleFormat::detect(const QStringList &lines) const {
   foreach (QString line, lines) {
     if (!line.trimmed().isEmpty()) {
-      QRegExp r("^\\[(\\d+)\\]\\[(\\d+)\\](.*)");
-      r.setPatternSyntax(QRegExp::RegExp2);
-      return r.exactMatch(line);
+      QRegularExpression r("^\\[(\\d+)\\]\\[(\\d+)\\](.*)\\z");
+      return r.match(line).hasMatch();
     }
   }
 
@@ -31,13 +32,13 @@ SubFile MPL2SubtitleFormat::decode(const QStringList &lines) const {
 
   foreach (QString line, lines) {
     if (!line.trimmed().isEmpty()) {
-      QRegExp r("^\\[(\\d+)\\]\\[(\\d+)\\](.*)");
-      r.setPatternSyntax(QRegExp::RegExp2);
-      if (r.exactMatch(line)) {
+      QRegularExpression r("^\\[(\\d+)\\]\\[(\\d+)\\](.*)\\z");
+      const auto match = r.match(line);
+      if (match.hasMatch()) {
         SubEntry se;
-        se.frameStart = 100L * r.cap(1).toLong();
-        se.frameStop = 100L * r.cap(2).toLong();
-        QString tokenStream = r.cap(3);
+        se.frameStart = 100L * match.captured(1).toLong();
+        se.frameStop = 100L * match.captured(2).toLong();
+        QString tokenStream = match.captured(3);
 
         se.tokens = decodeTokenStream(tokenStream);
 

@@ -13,6 +13,9 @@
 *****************************************************************************/
 
 #include "frmoptions.h"
+#include "utils/windowutils.h"
+
+#include <algorithm>
 
 #include "config/qnapiconfig.h"
 
@@ -111,9 +114,7 @@ frmOptions::frmOptions(QWidget *parent, Qt::WindowFlags f)
     ui.cbSubFormat->addItem(format);
   }
 
-  QRect position = frameGeometry();
-  position.moveCenter(QDesktopWidget().availableGeometry().center());
-  move(position.topLeft());
+  centerOnPrimaryScreen(*this);
 }
 
 frmOptions::~frmOptions() {}
@@ -315,7 +316,7 @@ void frmOptions::showAllEncodings() {
   ui.cbEncTo->clear();
 
   QList<QByteArray> codecs = QTextCodec::availableCodecs();
-  qSort(codecs.begin(), codecs.end());
+  std::sort(codecs.begin(), codecs.end());
   for (QList<QByteArray>::iterator i = codecs.begin(); i != codecs.end(); i++) {
     ui.cbEncFrom->addItem(*i);
     ui.cbEncTo->addItem(*i);

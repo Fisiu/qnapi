@@ -12,9 +12,11 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "subtitleconverter.h"
 #include <QFile>
-#include <QTextStream>
+#include <QDebug>
+#include <QTextCodec>
 #include <cmath>
 #include "libqnapi.h"
 #include "movieinfo/movieinfoprovider.h"
@@ -59,7 +61,8 @@ bool SubtitleConverter::convertSubtitles(QString subtitleFile,
                                          QString movieFile) const {
   return convertSubtitles(
       subtitleFile, targetFormatName, targetFileName, [&]() -> double {
-        const Maybe<MovieInfo> mmi = movieInfoProvider->getMovieInfo(movieFile);
+        const std::optional<MovieInfo> mmi =
+            movieInfoProvider->getMovieInfo(movieFile);
         return mmi ? mmi.value().frameRate() : 0.0;
       });
 }
@@ -181,14 +184,24 @@ QStringList SubtitleConverter::readFile(const QString &filename,
                                         QString encoding,
                                         long atMostLines) const {
   QStringList buff;
-  long current = 0;
   QFile inputFile(filename);
   if (inputFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    QTextStream in(&inputFile);
-    in.setCodec(qPrintable(encoding));
-    while (!in.atEnd() && (atMostLines == 0 || current < atMostLines)) {
-      buff += in.readLine();
-      ++current;
+    QTextCodec* codec = QTextCodec::codecForName(
+        qPrintable(encoding.isEmpty() ? QStringLiteral("UTF-8") : encoding));
+    if (!codec) {
+      qWarning() << "Unsupported subtitle encoding:" << encoding;
+      return buff;
+    }
+
+    const QString text = codec->toUnicode(inputFile.readAll());
+    if (text.isEmpty()) return buff;
+
+    QStringList lines = text.split('\n', Qt::KeepEmptyParts);
+    if (text.endsWith('\n')) lines.removeLast();
+    for (QString line : lines) {
+      if (atMostLines != 0 && buff.size() >= atMostLines) break;
+      if (line.endsWith('\r')) line.chop(1);
+      buff.push_back(line);
     }
     inputFile.close();
   }
@@ -197,13 +210,21 @@ QStringList SubtitleConverter::readFile(const QString &filename,
 
 bool SubtitleConverter::writeFile(const QString &filename, QString encoding,
                                   const QStringList &lines) const {
+  QTextCodec* codec = QTextCodec::codecForName(
+      qPrintable(encoding.isEmpty() ? QStringLiteral("UTF-8") : encoding));
+  if (!codec) {
+    qWarning() << "Unsupported subtitle encoding:" << encoding;
+    return false;
+  }
+
   QFile outputFile(filename);
   if (outputFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    QTextStream out(&outputFile);
-    out.setCodec(qPrintable(encoding));
-    foreach (QString line, lines) { out << line << "\n"; }
+    QString text = lines.join('\n');
+    if (!lines.isEmpty()) text += '\n';
+    const QByteArray encoded = codec->fromUnicode(text);
+    const bool written = outputFile.write(encoded) == encoded.size();
     outputFile.close();
-    return true;
+    return written;
   } else {
     return false;
   }

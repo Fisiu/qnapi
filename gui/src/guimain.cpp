@@ -12,6 +12,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "guimain.h"
 #include <signal.h>
 #include <QDir>
@@ -19,6 +20,7 @@
 #include <QLibraryInfo>
 #include <QMessageBox>
 #include <QProcess>
+#include <QRegularExpression>
 #include <iostream>
 #include "config/qnapiconfig.h"
 #include "libqnapi.h"
@@ -138,12 +140,12 @@ static QString cliExecutableName =
     "qnapic";
 #endif
 
-Maybe<QString> cliExecutablePath() {
+std::optional<QString> cliExecutablePath() {
   QStringList searchPaths = {LibQNapi::appExecutableDir};
 
 #ifndef Q_OS_WIN
   searchPaths << QProcess::systemEnvironment()
-                     .filter(QRegExp("^PATH=(.*)$"))
+                     .filter(QRegularExpression("^PATH=(.*)$"))
                      .value(0)
                      .mid(5)
                      .split(":")
@@ -156,14 +158,14 @@ Maybe<QString> cliExecutablePath() {
   foreach (QString path, searchPaths) {
     QString candidate = path + QDir::separator() + cliExecutableName;
     if (QFileInfo(candidate).isExecutable()) {
-      return just(candidate);
+      return std::make_optional(candidate);
     }
   }
 
-  return nothing();
+  return std::nullopt;
 }
 
-bool isCLIAvailable() { return cliExecutablePath(); }
+bool isCLIAvailable() { return cliExecutablePath().has_value(); }
 
 int runCLI(const QStringList &args) {
   auto maybeCliExecutablePath = cliExecutablePath();
@@ -184,13 +186,13 @@ void installTranslation(QCoreApplication &app, QTranslator *qtTranslator,
                         QTranslator *translator, const QNapiConfig &config) {
   QString uiLanguage = LibQNapi::uiLanguage(config.generalConfig());
 
-  QString resourceDir = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+  QString resourceDir = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
 
-  qtTranslator->load("qt_" + uiLanguage, resourceDir);
-  app.installTranslator(qtTranslator);
+  if (qtTranslator->load("qt_" + uiLanguage, resourceDir))
+    app.installTranslator(qtTranslator);
 
-  translator->load("qnapi_" + uiLanguage, ":/translations");
-  app.installTranslator(translator);
+  if (translator->load("qnapi_" + uiLanguage, ":/translations"))
+    app.installTranslator(translator);
 }
 
 void regSignal() {

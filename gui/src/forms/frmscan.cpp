@@ -13,6 +13,7 @@
 *****************************************************************************/
 
 #include "frmscan.h"
+#include "utils/windowutils.h"
 #include "libqnapi.h"
 
 frmScan::frmScan(QWidget *parent, Qt::WindowFlags f)
@@ -56,9 +57,7 @@ frmScan::frmScan(QWidget *parent, Qt::WindowFlags f)
 
   iconFilm = QIcon(":/ui/film.png");
 
-  QRect position = frameGeometry();
-  position.moveCenter(QDesktopWidget().availableGeometry().center());
-  move(position.topLeft());
+  centerOnPrimaryScreen(*this);
 }
 
 frmScan::~frmScan() {

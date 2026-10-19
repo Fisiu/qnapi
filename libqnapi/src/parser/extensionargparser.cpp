@@ -12,8 +12,9 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "extensionargparser.h"
-#include <QRegExp>
+#include <QRegularExpression>
 
 ExtensionArgParser::ExtensionArgParser() {}
 
@@ -35,7 +36,7 @@ QVariant ExtensionArgParser::parse(const QStringList& args,
 
   QString ext = args[idx + 1];
 
-  if (!QRegExp("^[A-Za-z0-9]+$").exactMatch(ext)) {
+  if (!QRegularExpression("^[A-Za-z0-9]+\\z").match(ext).hasMatch()) {
     return QVariant::fromValue(ParseError{
         tr("Invalid target subtitles extension passed: %1").arg(ext)});
   } else {
@@ -44,7 +45,7 @@ QVariant ExtensionArgParser::parse(const QStringList& args,
   }
 }
 
-Maybe<CliArgParser::HelpInfo> ExtensionArgParser::helpInfo() const {
-  return just(HelpInfo{"-e", "--extension", tr("ext"),
+std::optional<CliArgParser::HelpInfo> ExtensionArgParser::helpInfo() const {
+  return std::make_optional(HelpInfo{"-e", "--extension", tr("ext"),
                        tr("Select target subtitles file extension")});
 }

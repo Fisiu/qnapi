@@ -12,6 +12,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "runcliappargparser.h"
 #include "qnapicommand.h"
 
@@ -31,8 +32,8 @@ QVariant RunCLIAppArgParser::parse(const QStringList& args,
   }
 }
 
-Maybe<CliArgParser::HelpInfo> RunCLIAppArgParser::helpInfo() const {
-  return just(
+std::optional<CliArgParser::HelpInfo> RunCLIAppArgParser::helpInfo() const {
+  return std::make_optional(
       HelpInfo{"-c", "--console", "",
                tr("Run in command-line mode (requires separate CLI binary)")});
 }

@@ -2,8 +2,8 @@
 
 QNapi is free software for automatic fetching subtitles for given movie file.
 It uses online databases such as NapiProjekt, OpenSubtitles and Napisy24.
-It is based on Qt5 library, so it can be launched on any supported operating
-system, including Windows, OSX and Linux.
+It is based on the Qt 6 library, so it can be launched on any supported
+operating system, including Windows, OSX and Linux.
 
 ## Binary packages
 
@@ -13,8 +13,8 @@ Latest binary packages are available at http://qnapi.github.io/#download
 
 #### Prerequisites
 
-* C++ compiler with c++11 support installed (`clang++`, `g++` or *MinGW* for Windows), present in `PATH`
-* Qt 5.2+ (most recent 5.x recommended) installed with `qmake` present in `PATH` (you can find one at http://www.qt.io/download-open-source/)
+* C++17-capable compiler (`clang++`, `g++` or *MinGW* for Windows), present in `PATH`
+* Qt 6.5+ with the Core5Compat module installed and its `qmake` present in `PATH`
 
 #### Binary prerequisites
 
@@ -36,13 +36,13 @@ compiled **libmediainfo** libraries are provided for Windows/OSX in
 
 First, you have to clone project source code using git client:
 
-`$ git clone --recursive https://github.com/QNapi/qnapi.git`
+`$ git clone https://github.com/QNapi/qnapi.git`
 
 #### Compiling
 
 To compile the application, you have to execute two following commands in `qnapi` root directory:
 
-`$ qmake`
+`$ qmake` (or `qmake6`, depending on your Qt installation)
 
 This will produce `Makefile`.
 
@@ -53,6 +53,17 @@ This will produce `Makefile`.
 `$ make` (or `mingw32-make` on Windows)
 
 This will compile the sources and build executable binary (or app bundle on OSX).
+
+#### Tests
+
+The XML-RPC client test uses a local server and does not contact OpenSubtitles:
+
+```sh
+cd tests
+qmake6 syncxmlrpc_test.pro
+make
+./syncxmlrpc-test
+```
 
 > **Important!** Windows users have to execute one more command:
 >

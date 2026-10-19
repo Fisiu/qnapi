@@ -12,8 +12,7 @@
 **
 *****************************************************************************/
 
-#include "Either.h"
-#include "Maybe.h"
+#include <optional>
 #include "climain.h"
 #include "libqnapi.h"
 #include "parser/backuplangargparser.h"
@@ -67,9 +66,10 @@ int main(int argc, char **argv) {
 
   const Console c;
 
-  if (parseResult.is<Maybe<CliArgParser::ParsedCommand>>()) {
-    auto parsedMaybeCommand =
-        parseResult.as<Maybe<CliArgParser::ParsedCommand>>();
+  if (std::holds_alternative<
+          std::optional<CliArgParser::ParsedCommand>>(parseResult)) {
+    auto parsedMaybeCommand = std::get<
+        std::optional<CliArgParser::ParsedCommand>>(parseResult);
 
     if (parsedMaybeCommand) {
       auto parsedCommand = parsedMaybeCommand.value();
@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
   } else {
     CliMain::printHeader(c);
     c.printLine(CliMain::tr("Command line argument parsing error:"));
-    c.printLine(parseResult.as<QString>());
+    c.printLine(std::get<QString>(parseResult));
     return -1;
   }
 }

@@ -13,8 +13,8 @@
 *****************************************************************************/
 
 #include "frmprogress.h"
+#include "utils/windowutils.h"
 #include <QCloseEvent>
-#include <QDesktopWidget>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -46,9 +46,7 @@ frmProgress::frmProgress(QWidget *parent, Qt::WindowFlags f)
           SLOT(subtitlesSelected(int)));
   connect(&getThread, SIGNAL(finished()), this, SLOT(downloadFinished()));
 
-  QRect position = frameGeometry();
-  position.moveCenter(QDesktopWidget().availableGeometry().center());
-  move(position.topLeft());
+  centerOnPrimaryScreen(*this);
 }
 
 void frmProgress::receiveRequest(const QString &request) {
@@ -103,9 +101,7 @@ bool frmProgress::download(const QNapiConfig &config) {
   }
 
   if (!isVisible()) {
-    QRect position = frameGeometry();
-    position.moveCenter(QDesktopWidget().availableGeometry().center());
-    move(position.topLeft());
+    centerOnPrimaryScreen(*this);
     show();
   }
 

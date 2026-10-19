@@ -15,6 +15,7 @@
 #ifndef __FRMPROGRESS__H__
 #define __FRMPROGRESS__H__
 
+#include <optional>
 #include <QMutex>
 
 #include "ui_frmprogress.h"
@@ -23,7 +24,6 @@
 
 #include "config/qnapiconfig.h"
 
-#include <Maybe.h>
 #include "frmlistsubtitles.h"
 #include "qnapi.h"
 #include "qnapiopendialog.h"
@@ -48,14 +48,16 @@ class GetThread : public QNapiThread {
   void subtitlesSelected(int idx);
 
  public:
-  void setSpecificEngine(Maybe<QString> engine) { specificEngine = engine; }
+  void setSpecificEngine(std::optional<QString> engine) {
+    specificEngine = engine;
+  }
 
   void setConfig(const QNapiConfig &configuration) { config = configuration; }
 
   void run();
 
   QStringList queue;
-  Maybe<QString> specificEngine;
+  std::optional<QString> specificEngine;
   QList<SubtitleInfo> subStatusList;
   int napiSuccess, napiFail;
   QString criticalMessage;
@@ -68,11 +70,11 @@ class frmProgress : public QWidget {
   Q_OBJECT
 
  public:
-  frmProgress(QWidget *parent = 0, Qt::WindowFlags f = 0);
+  frmProgress(QWidget *parent = 0, Qt::WindowFlags f = Qt::WindowFlags{});
 
-  void clearSpecificEngine() { getThread.setSpecificEngine(nothing()); }
+  void clearSpecificEngine() { getThread.setSpecificEngine(std::nullopt); }
   void setSpecificEngine(QString engine) {
-    getThread.setSpecificEngine(just(engine));
+    getThread.setSpecificEngine(std::make_optional(engine));
   }
 
   void setBatchMode(bool value) { batchMode = value; }

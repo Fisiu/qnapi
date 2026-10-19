@@ -12,6 +12,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "napiprojektdownloadengine.h"
 #include "subtitlelanguage.h"
 #include "utils/synchttp.h"
@@ -61,7 +62,7 @@ SubtitleDownloadEngineMetadata NapiProjektDownloadEngine::metadata =
     SubtitleDownloadEngineMetadata(
         "NapiProjekt",
         QObject::tr("<b>www.napiprojekt.pl</b> subtitles download engine"),
-        just(QUrl("http://www.napiprojekt.pl/rejestracja")), nothing());
+        std::make_optional(QUrl("http://www.napiprojekt.pl/rejestracja")), std::nullopt);
 
 NapiProjektDownloadEngine::NapiProjektDownloadEngine(
     const QString &tmpPath, const EngineConfig &config,
@@ -86,7 +87,7 @@ QString NapiProjektDownloadEngine::checksum(QString filename) {
 }
 
 bool NapiProjektDownloadEngine::lookForSubtitles(QString lang) {
-  Maybe<QString> tmpPackedFileOpt = downloadByLangAndChecksum(lang, checkSum);
+  std::optional<QString> tmpPackedFileOpt = downloadByLangAndChecksum(lang, checkSum);
 
   if (!tmpPackedFileOpt) {
     return false;
@@ -105,14 +106,14 @@ QList<SubtitleInfo> NapiProjektDownloadEngine::listSubtitles() {
 }
 
 bool NapiProjektDownloadEngine::download(QUuid id) {
-  Maybe<SubtitleInfo> ms = resolveById(id);
+  std::optional<SubtitleInfo> ms = resolveById(id);
 
   return ms && QFile::exists(ms.value().sourceLocation);
 }
 
-Maybe<QString> NapiProjektDownloadEngine::downloadByLangAndChecksum(
+std::optional<QString> NapiProjektDownloadEngine::downloadByLangAndChecksum(
     QString lang, QString checksum) const {
-  if (checksum.isEmpty()) return nothing();
+  if (checksum.isEmpty()) return std::nullopt;
 
   QString urlTxt = napiDownloadUrlTpl.arg(npLangWrapper(lang))
                        .arg(checksum)
@@ -126,28 +127,28 @@ Maybe<QString> NapiProjektDownloadEngine::downloadByLangAndChecksum(
   SyncHTTP http;
   QNetworkReply *reply = http.syncGet(QNetworkRequest(url));
 
-  if (reply->error() != QNetworkReply::NoError) return nothing();
+  if (reply->error() != QNetworkReply::NoError) return std::nullopt;
 
   QByteArray buffer = reply->readAll();
 
-  if (buffer.indexOf("NPc") == 0) return nothing();
+  if (buffer.indexOf("NPc") == 0) return std::nullopt;
 
   QString tmpPackedFile = generateTmpPath();
 
   QFile file(tmpPackedFile);
   if (file.exists()) file.remove();
-  if (!file.open(QIODevice::WriteOnly)) return nothing();
+  if (!file.open(QIODevice::WriteOnly)) return std::nullopt;
 
   long r = file.write(buffer);
   file.close();
 
-  if (r < 0) return nothing();
+  if (r < 0) return std::nullopt;
 
-  return just(tmpPackedFile);
+  return std::make_optional(tmpPackedFile);
 }
 
 bool NapiProjektDownloadEngine::unpack(QUuid id) {
-  Maybe<SubtitleInfo> ms = resolveById(id);
+  std::optional<SubtitleInfo> ms = resolveById(id);
   if (!ms) return false;
 
   if (!QFile::exists(movie)) return false;

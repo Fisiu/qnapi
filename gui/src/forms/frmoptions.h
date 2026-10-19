@@ -22,7 +22,6 @@
 #include "engines/subtitledownloadenginesregistry.h"
 #include "subconvert/subtitleformatsregistry.h"
 
-#include <QDesktopWidget>
 #include <QDir>
 #include <QFileDialog>
 #include <QFileInfo>
@@ -34,7 +33,7 @@
 class frmOptions : public QDialog {
   Q_OBJECT
  public:
-  frmOptions(QWidget *parent = 0, Qt::WindowFlags f = 0);
+  frmOptions(QWidget *parent = 0, Qt::WindowFlags f = Qt::WindowFlags{});
   ~frmOptions();
 
  public slots:

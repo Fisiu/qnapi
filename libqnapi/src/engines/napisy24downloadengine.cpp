@@ -13,6 +13,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "napisy24downloadengine.h"
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -24,8 +25,8 @@ SubtitleDownloadEngineMetadata Napisy24DownloadEngine::metadata =
     SubtitleDownloadEngineMetadata(
         "Napisy24",
         QObject::tr("<b>www.napisy24.pl</b> subtitle download engine"),
-        just(QUrl("http://napisy24.pl/cb-registration/registers")),
-        just(QUrl("http://napisy24.pl/dodaj-napisy")));
+        std::make_optional(QUrl("http://napisy24.pl/cb-registration/registers")),
+        std::make_optional(QUrl("http://napisy24.pl/dodaj-napisy")));
 
 Napisy24DownloadEngine::Napisy24DownloadEngine(
     const QString &tmpPath, const EngineConfig &config,
@@ -120,13 +121,13 @@ QList<SubtitleInfo> Napisy24DownloadEngine::listSubtitles() {
 }
 
 bool Napisy24DownloadEngine::download(QUuid id) {
-  Maybe<SubtitleInfo> ms = resolveById(id);
+  std::optional<SubtitleInfo> ms = resolveById(id);
 
   return ms && QFile::exists(ms.value().sourceLocation);
 }
 
 bool Napisy24DownloadEngine::unpack(QUuid id) {
-  Maybe<SubtitleInfo> ms = resolveById(id);
+  std::optional<SubtitleInfo> ms = resolveById(id);
   if (!ms) return false;
 
   if (!QFile::exists(movie)) return false;

@@ -12,11 +12,12 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include <QDesktopServices>
-#include <QDesktopWidget>
 
 #include "engines/napiprojektdownloadengine.h"
 #include "frmnapiprojektconfig.h"
+#include "utils/windowutils.h"
 
 frmNapiProjektConfig::frmNapiProjektConfig(const EngineConfig &config,
                                            QWidget *parent, Qt::WindowFlags f)
@@ -31,9 +32,7 @@ frmNapiProjektConfig::frmNapiProjektConfig(const EngineConfig &config,
 
   connect(ui.pbRegister, SIGNAL(clicked()), this, SLOT(pbRegisterClicked()));
 
-  QRect position = frameGeometry();
-  position.moveCenter(QDesktopWidget().availableGeometry().center());
-  move(position.topLeft());
+  centerOnPrimaryScreen(*this);
 }
 
 EngineConfig frmNapiProjektConfig::getConfig() const { return config; }
@@ -44,7 +43,7 @@ void frmNapiProjektConfig::accept() {
 }
 
 void frmNapiProjektConfig::pbRegisterClicked() {
-  Maybe<QUrl> maybeRegistrationUrl =
+  std::optional<QUrl> maybeRegistrationUrl =
       NapiProjektDownloadEngine::metadata.registrationUrl();
 
   if (maybeRegistrationUrl) {

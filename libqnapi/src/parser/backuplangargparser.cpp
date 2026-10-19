@@ -12,6 +12,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "backuplangargparser.h"
 #include "subtitlelanguage.h"
 
@@ -46,7 +47,7 @@ QVariant BackupLangArgParser::parse(const QStringList& args,
   }
 }
 
-Maybe<CliArgParser::HelpInfo> BackupLangArgParser::helpInfo() const {
-  return just(HelpInfo{"-lb", "--lang-backup", tr("code"),
+std::optional<CliArgParser::HelpInfo> BackupLangArgParser::helpInfo() const {
+  return std::make_optional(HelpInfo{"-lb", "--lang-backup", tr("code"),
                        tr("Alternative subtitles language")});
 }

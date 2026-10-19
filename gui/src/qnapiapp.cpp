@@ -12,6 +12,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "qnapiapp.h"
 
 #include <iostream>
@@ -21,7 +22,6 @@ QNapiApp::QNapiApp(int &argc, char **argv, const QString &appName)
     : QSingleApplication(argc, argv, appName),
       creationDT(QDateTime::currentDateTime()),
       enginesRegistry(LibQNapi::subtitleDownloadEngineRegistry()) {
-  setAttribute(Qt::AA_UseHighDpiPixmaps, true);
 
   openDialog = 0;
 
@@ -268,7 +268,7 @@ void QNapiApp::showConvertDialog() {
 }
 
 void QNapiApp::showCreateAccount(const QString &engineName) const {
-  Maybe<QUrl> maybeRegistrationUrl =
+  std::optional<QUrl> maybeRegistrationUrl =
       enginesRegistry->engineMetadata(engineName).registrationUrl();
 
   if (maybeRegistrationUrl) {

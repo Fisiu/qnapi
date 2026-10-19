@@ -17,16 +17,16 @@
 
 QString GeneralConfig::toString() const {
   QString s;
-  QTextStream(&s) << "uiLanguage: " << uiLanguage() << endl
-                  << "p7zipPath: " << p7zipPath() << endl
-                  << "tmpPath: " << tmpPath() << endl
-                  << "language: " << language() << endl
-                  << "backupLanguage: " << backupLanguage() << endl
-                  << "noBackup: " << noBackup() << endl
-                  << "quietBatch: " << quietBatch() << endl
-                  << "searchPolicy: " << searchPolicy() << endl
-                  << "downloadPolicy: " << downloadPolicy() << endl
-                  << "changePermissions: " << changePermissionsEnabled() << endl
-                  << "changePermissionsTo: " << changePermissionsTo() << endl;
+  QTextStream(&s) << "uiLanguage: " << uiLanguage() << Qt::endl
+                  << "p7zipPath: " << p7zipPath() << Qt::endl
+                  << "tmpPath: " << tmpPath() << Qt::endl
+                  << "language: " << language() << Qt::endl
+                  << "backupLanguage: " << backupLanguage() << Qt::endl
+                  << "noBackup: " << noBackup() << Qt::endl
+                  << "quietBatch: " << quietBatch() << Qt::endl
+                  << "searchPolicy: " << searchPolicy() << Qt::endl
+                  << "downloadPolicy: " << downloadPolicy() << Qt::endl
+                  << "changePermissions: " << changePermissionsEnabled() << Qt::endl
+                  << "changePermissionsTo: " << changePermissionsTo() << Qt::endl;
   return s;
 }

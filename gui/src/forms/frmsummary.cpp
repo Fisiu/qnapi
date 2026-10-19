@@ -13,11 +13,11 @@
 *****************************************************************************/
 
 #include "frmsummary.h"
+#include "utils/windowutils.h"
 #include "libqnapi.h"
 
 #include "subdatawidget.h"
 
-#include <QDesktopWidget>
 #include <QListWidget>
 
 frmSummary::frmSummary(QWidget *parent, Qt::WindowFlags f)
@@ -26,9 +26,7 @@ frmSummary::frmSummary(QWidget *parent, Qt::WindowFlags f)
 
   setAttribute(Qt::WA_QuitOnClose, false);
 
-  QRect position = frameGeometry();
-  position.moveCenter(QDesktopWidget().availableGeometry().center());
-  move(position.topLeft());
+  centerOnPrimaryScreen(*this);
 }
 
 void frmSummary::setSummaryList(QList<SubtitleInfo> list) {

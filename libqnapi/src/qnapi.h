@@ -15,12 +15,12 @@
 #ifndef __QNAPI__H__
 #define __QNAPI__H__
 
+#include <optional>
 #include "config/qnapiconfig.h"
 #include "engines/subtitledownloadengine.h"
 #include "engines/subtitledownloadenginesregistry.h"
 #include "subtitleinfo.h"
 
-#include <Maybe.h>
 #include <QList>
 #include <QSharedPointer>
 #include <QString>
@@ -29,7 +29,7 @@
 class QNapi {
  public:
   QNapi(const QNapiConfig& config,
-        const Maybe<QString>& specificEngine = nothing());
+        const std::optional<QString>& specificEngine = std::nullopt);
   ~QNapi();
 
   bool checkP7ZipPath();

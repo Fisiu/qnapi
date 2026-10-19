@@ -12,8 +12,9 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "libmediainfomovieinfoprovider.h"
-#include <QRegExp>
+#include <QRegularExpression>
 #include <string>
 
 #ifndef UNICODE
@@ -33,7 +34,7 @@
 #endif
 using namespace MediaInfoNameSpace;
 
-const Maybe<MovieInfo> LibmediainfoMovieInfoProvider::getMovieInfo(
+const std::optional<MovieInfo> LibmediainfoMovieInfoProvider::getMovieInfo(
     const QString& moviePath) const {
   MediaInfo mi;
   mi.Option(__T("Internet"), __T("No"));
@@ -51,23 +52,28 @@ const Maybe<MovieInfo> LibmediainfoMovieInfoProvider::getMovieInfo(
 
   mi.Close();
 
-  QRegExp rWidth("(\\d+)");
-  if (rWidth.indexIn(widthS) == -1) return nothing();
+  QRegularExpression rWidth("(\\d+)");
+  const auto widthMatch = rWidth.match(widthS);
+  if (!widthMatch.hasMatch()) return std::nullopt;
 
-  QRegExp rHeight("(\\d+)");
-  if (rHeight.indexIn(heightS) == -1) return nothing();
+  QRegularExpression rHeight("(\\d+)");
+  const auto heightMatch = rHeight.match(heightS);
+  if (!heightMatch.hasMatch()) return std::nullopt;
 
-  QRegExp rFrameRate("(\\d+).(\\d+)");
-  if (rFrameRate.indexIn(frameRateS) == -1) return nothing();
-  long frFloor = rFrameRate.cap(1).toLong();
-  long frFrac = rFrameRate.cap(2).toLong();
+  QRegularExpression rFrameRate("(\\d+).(\\d+)");
+  const auto frameRateMatch = rFrameRate.match(frameRateS);
+  if (!frameRateMatch.hasMatch()) return std::nullopt;
+  long frFloor = frameRateMatch.captured(1).toLong();
+  long frFrac = frameRateMatch.captured(2).toLong();
 
-  QRegExp rDuration("(\\d+)");
-  if (rDuration.indexIn(durationS) == -1) return nothing();
+  QRegularExpression rDuration("(\\d+)");
+  const auto durationMatch = rDuration.match(durationS);
+  if (!durationMatch.hasMatch()) return std::nullopt;
 
-  MovieInfo info(rWidth.cap(1).toInt(), rHeight.cap(1).toInt(),
+  MovieInfo info(widthMatch.captured(1).toInt(),
+                 heightMatch.captured(1).toInt(),
                  (double)frFloor + (double)frFrac / 1000.0,
-                 rDuration.cap(1).toDouble() / 1000.0);
+                 durationMatch.captured(1).toDouble() / 1000.0);
 
-  return just<MovieInfo>(info);
+  return std::make_optional<MovieInfo>(info);
 }

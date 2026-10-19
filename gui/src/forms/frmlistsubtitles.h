@@ -27,7 +27,7 @@ class frmListSubtitles : public QDialog {
   Q_OBJECT
 
  public:
-  frmListSubtitles(QWidget *parent = 0, Qt::WindowFlags f = 0);
+  frmListSubtitles(QWidget *parent = 0, Qt::WindowFlags f = Qt::WindowFlags{});
   ~frmListSubtitles() {}
 
  public slots:

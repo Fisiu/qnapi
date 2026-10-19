@@ -12,6 +12,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "formatargparser.h"
 #include "libqnapi.h"
 
@@ -44,8 +45,8 @@ QVariant FormatArgParser::parse(const QStringList& args,
   }
 }
 
-Maybe<CliArgParser::HelpInfo> FormatArgParser::helpInfo() const {
-  return just(HelpInfo{
+std::optional<CliArgParser::HelpInfo> FormatArgParser::helpInfo() const {
+  return std::make_optional(HelpInfo{
       "-f", "--format", tr("format"),
       tr("Select target subtitles file format (one of mDVD, MPL2, SRT, TMP)")});
 }

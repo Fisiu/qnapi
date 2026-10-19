@@ -24,32 +24,32 @@ QString QNapiConfig::toString() const {
     QString engineName = engineCfg.first;
     bool engineEnabled = engineCfg.second;
     QString engineEnabledStr = engineEnabled ? "enabled" : "disabled";
-    ees << " " << engineName << ": " << engineEnabledStr << endl;
+    ees << " " << engineName << ": " << engineEnabledStr << Qt::endl;
   }
 
   QTextStream es(&enginesCfgStr);
   foreach (QString engineName, enginesConfig().keys()) {
     EngineConfig cfg = *enginesConfig().find(engineName);
-    es << " " << engineName << ": " << endl
-       << "  nick: " << cfg.nick() << endl
-       << "  password: " << cfg.password() << endl;
+    es << " " << engineName << ": " << Qt::endl
+       << "  nick: " << cfg.nick() << Qt::endl
+       << "  password: " << cfg.password() << Qt::endl;
   }
 
   QString s;
-  QTextStream(&s) << "Version: " << version() << endl
-                  << "First run? " << (firstrun() ? "yes" : "no") << endl
-                  << endl
-                  << "General config:" << endl
-                  << generalConfig().toString() << endl
-                  << "Enabled Engines:" << endl
-                  << enabledEnginesStr << endl
-                  << "Engines config:" << endl
-                  << enginesCfgStr << endl
-                  << "Post-processing config:" << endl
-                  << postProcessingConfig().toString() << endl
-                  << "Scan config:" << endl
-                  << scanConfig().toString() << endl
-                  << "Last open-dialog dir:" << endl
-                  << lastOpenedDir() << endl;
+  QTextStream(&s) << "Version: " << version() << Qt::endl
+                  << "First run? " << (firstrun() ? "yes" : "no") << Qt::endl
+                  << Qt::endl
+                  << "General config:" << Qt::endl
+                  << generalConfig().toString() << Qt::endl
+                  << "Enabled Engines:" << Qt::endl
+                  << enabledEnginesStr << Qt::endl
+                  << "Engines config:" << Qt::endl
+                  << enginesCfgStr << Qt::endl
+                  << "Post-processing config:" << Qt::endl
+                  << postProcessingConfig().toString() << Qt::endl
+                  << "Scan config:" << Qt::endl
+                  << scanConfig().toString() << Qt::endl
+                  << "Last open-dialog dir:" << Qt::endl
+                  << lastOpenedDir() << Qt::endl;
   return s;
 }

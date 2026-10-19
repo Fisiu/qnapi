@@ -12,11 +12,12 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include <QDesktopServices>
-#include <QDesktopWidget>
 
 #include "engines/opensubtitlesdownloadengine.h"
 #include "frmopensubtitlesconfig.h"
+#include "utils/windowutils.h"
 
 frmOpenSubtitlesConfig::frmOpenSubtitlesConfig(const EngineConfig &config,
                                                QWidget *parent,
@@ -33,9 +34,7 @@ frmOpenSubtitlesConfig::frmOpenSubtitlesConfig(const EngineConfig &config,
 
   connect(ui.pbRegister, SIGNAL(clicked()), this, SLOT(pbRegisterClicked()));
 
-  QRect position = frameGeometry();
-  position.moveCenter(QDesktopWidget().availableGeometry().center());
-  move(position.topLeft());
+  centerOnPrimaryScreen(*this);
 }
 
 EngineConfig frmOpenSubtitlesConfig::getConfig() const { return config; }
@@ -46,7 +45,7 @@ void frmOpenSubtitlesConfig::accept() {
 }
 
 void frmOpenSubtitlesConfig::pbRegisterClicked() {
-  Maybe<QUrl> maybeRegistrationUrl =
+  std::optional<QUrl> maybeRegistrationUrl =
       OpenSubtitlesDownloadEngine::metadata.registrationUrl();
 
   if (maybeRegistrationUrl) {

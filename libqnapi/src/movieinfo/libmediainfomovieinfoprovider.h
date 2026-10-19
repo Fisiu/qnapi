@@ -15,13 +15,14 @@
 #ifndef LIBMEDIAINFOMOVIEINFOPARSER_H
 #define LIBMEDIAINFOMOVIEINFOPARSER_H
 
+#include <optional>
 #include "movieinfoprovider.h"
 
 class LibmediainfoMovieInfoProvider : public MovieInfoProvider {
  public:
   virtual ~LibmediainfoMovieInfoProvider() {}
 
-  const Maybe<MovieInfo> getMovieInfo(const QString& moviePath) const;
+  const std::optional<MovieInfo> getMovieInfo(const QString& moviePath) const;
 };
 
 #endif  // LIBMEDIAINFOMOVIEINFOPARSER_H

@@ -15,9 +15,9 @@
 #include "libqnapi.h"
 
 #include "frmlistsubtitles.h"
+#include "utils/windowutils.h"
 #include "subdatawidget.h"
 
-#include <QDesktopWidget>
 #include <QMessageBox>
 #include <QtWidgets/QHeaderView>
 
@@ -26,9 +26,7 @@ frmListSubtitles::frmListSubtitles(QWidget *parent, Qt::WindowFlags f)
       enginesRegistry(LibQNapi::subtitleDownloadEngineRegistry()) {
   ui.setupUi(this);
 
-  QRect position = frameGeometry();
-  position.moveCenter(QDesktopWidget().availableGeometry().center());
-  move(position.topLeft());
+  centerOnPrimaryScreen(*this);
 }
 
 void frmListSubtitles::setFileName(const QString &name) {

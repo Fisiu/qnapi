@@ -17,17 +17,17 @@
 
 QString PostProcessingConfig::toString() const {
   QString s;
-  QTextStream(&s) << "enabled: " << enabled() << endl
-                  << "encodingChangeMethod: " << encodingChangeMethod() << endl
-                  << "encodingFrom: " << encodingFrom() << endl
+  QTextStream(&s) << "enabled: " << enabled() << Qt::endl
+                  << "encodingChangeMethod: " << encodingChangeMethod() << Qt::endl
+                  << "encodingFrom: " << encodingFrom() << Qt::endl
                   << "encodingAutoDetectFrom: " << encodingAutoDetectFrom()
-                  << endl
-                  << "encodingTo: " << encodingTo() << endl
-                  << "showAllEncodings: " << showAllEncodings() << endl
-                  << "subFormat: " << subFormat() << endl
-                  << "subExtension: " << subExtension() << endl
-                  << "skipConvertAds: " << skipConvertAds() << endl
-                  << "removeLines: " << removeLines() << endl
-                  << "removeLinesWords: " << removeLinesWords().join("; ") << endl;
+                  << Qt::endl
+                  << "encodingTo: " << encodingTo() << Qt::endl
+                  << "showAllEncodings: " << showAllEncodings() << Qt::endl
+                  << "subFormat: " << subFormat() << Qt::endl
+                  << "subExtension: " << subExtension() << Qt::endl
+                  << "skipConvertAds: " << skipConvertAds() << Qt::endl
+                  << "removeLines: " << removeLines() << Qt::endl
+                  << "removeLinesWords: " << removeLinesWords().join("; ") << Qt::endl;
   return s;
 }

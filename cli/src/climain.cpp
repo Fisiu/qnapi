@@ -29,8 +29,8 @@ namespace CliMain {
 void installTranslation(QCoreApplication &app, QTranslator *translator,
                         const QNapiConfig &config) {
   QString uiLanguage = LibQNapi::uiLanguage(config.generalConfig());
-  translator->load("qnapi_" + uiLanguage, ":/translations");
-  app.installTranslator(translator);
+  if (translator->load("qnapi_" + uiLanguage, ":/translations"))
+    app.installTranslator(translator);
 }
 
 void printHeader(const Console &c) {

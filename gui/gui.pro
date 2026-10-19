@@ -1,8 +1,8 @@
 TEMPLATE = app
 
-CONFIG += warn_on qt resources silent c++11
+CONFIG += warn_on qt resources silent c++17
 
-QT += core network xml gui widgets
+QT += core network xml core5compat gui widgets
 
 SOURCES += src/main.cpp \
     src/forms/frmprogress.cpp \
@@ -42,7 +42,8 @@ HEADERS += src/forms/frmprogress.h \
     src/qnapithread.h \
     src/qnapiopendialog.h \
     src/qnapiapp.h \
-    src/guimain.h
+    src/guimain.h \
+    src/utils/windowutils.h
 
 FORMS += ui/frmprogress.ui \
     ui/frmlistsubtitles.ui \
@@ -81,8 +82,6 @@ macx {
     DESTDIR = $${OUTDIR}
 
     LIBS += -framework CoreFoundation
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.8
-    QMAKE_CXXFLAGS_X86_64 = -mmacosx-version-min=10.8
     ICON = $${OUTDIR}/qnapi.icns
     QMAKE_INFO_PLIST = $${OUTDIR}/Info.plist
     7ZIP_BINARY.files = $${OUTDIR}/content/7za

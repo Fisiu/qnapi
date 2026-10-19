@@ -12,11 +12,12 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include <QDesktopServices>
-#include <QDesktopWidget>
 
 #include "engines/napisy24downloadengine.h"
 #include "frmnapisy24config.h"
+#include "utils/windowutils.h"
 
 frmNapisy24Config::frmNapisy24Config(const EngineConfig &config,
                                      QWidget *parent, Qt::WindowFlags f)
@@ -31,9 +32,7 @@ frmNapisy24Config::frmNapisy24Config(const EngineConfig &config,
 
   connect(ui.pbRegister, SIGNAL(clicked()), this, SLOT(pbRegisterClicked()));
 
-  QRect position = frameGeometry();
-  position.moveCenter(QDesktopWidget().availableGeometry().center());
-  move(position.topLeft());
+  centerOnPrimaryScreen(*this);
 }
 
 EngineConfig frmNapisy24Config::getConfig() const { return config; }
@@ -44,7 +43,7 @@ void frmNapisy24Config::accept() {
 }
 
 void frmNapisy24Config::pbRegisterClicked() {
-  Maybe<QUrl> maybeRegistrationUrl =
+  std::optional<QUrl> maybeRegistrationUrl =
       Napisy24DownloadEngine::metadata.registrationUrl();
 
   if (maybeRegistrationUrl) {

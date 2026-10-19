@@ -12,6 +12,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "showhelplanguagesargparser.h"
 #include "qnapicommand.h"
 
@@ -27,7 +28,7 @@ QVariant ShowHelpLanguagesArgParser::parse(const QStringList& args,
   }
 }
 
-Maybe<CliArgParser::HelpInfo> ShowHelpLanguagesArgParser::helpInfo() const {
-  return just(HelpInfo{"-hl", "--help-languages", "",
+std::optional<CliArgParser::HelpInfo> ShowHelpLanguagesArgParser::helpInfo() const {
+  return std::make_optional(HelpInfo{"-hl", "--help-languages", "",
                        tr("List of available subtitles languages")});
 }

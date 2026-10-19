@@ -13,6 +13,7 @@
 *****************************************************************************/
 
 #include "frmabout.h"
+#include "utils/windowutils.h"
 #include "libqnapi.h"
 
 frmAbout::frmAbout(QWidget* parent, Qt::WindowFlags f) : QDialog(parent, f) {
@@ -22,9 +23,7 @@ frmAbout::frmAbout(QWidget* parent, Qt::WindowFlags f) : QDialog(parent, f) {
   ui.lbTitle->setText(QString("QNapi ") + LibQNapi::displayableVersion());
   ui.lbQtVersion->setText(QString("Qt version: ") + qVersion());
 
-  QRect position = frameGeometry();
-  position.moveCenter(QDesktopWidget().availableGeometry().center());
-  move(position.topLeft());
+  centerOnPrimaryScreen(*this);
 
   ui.lbQNapiIcon->setPixmap(QIcon(":/icon/qnapi.png").pixmap(64));
   ui.lbNPBanner->setPixmap(QIcon(":/icon/napiprojekt.jpg").pixmap(128, 35));

@@ -12,6 +12,7 @@
 **
 *****************************************************************************/
 
+#include <optional>
 #include "dontshowlistargparser.h"
 
 DontShowListArgParser::DontShowListArgParser() {}
@@ -27,7 +28,7 @@ QVariant DontShowListArgParser::parse(const QStringList& args,
   }
 }
 
-Maybe<CliArgParser::HelpInfo> DontShowListArgParser::helpInfo() const {
-  return just(HelpInfo{"-d", "--dont-show-list", "",
+std::optional<CliArgParser::HelpInfo> DontShowListArgParser::helpInfo() const {
+  return std::make_optional(HelpInfo{"-d", "--dont-show-list", "",
                        tr("Never show a list of available subtitles")});
 }

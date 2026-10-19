@@ -15,6 +15,7 @@
 #ifndef RUNCLIAPPARGPARSER_H
 #define RUNCLIAPPARGPARSER_H
 
+#include <optional>
 #include "parser/cliargparser.h"
 #include "tr.h"
 
@@ -27,7 +28,7 @@ class RunCLIAppArgParser : public CliArgParser {
   virtual QVariant parse(const QStringList& args,
                          const QNapiConfig& config) const;
 
-  virtual Maybe<HelpInfo> helpInfo() const;
+  virtual std::optional<HelpInfo> helpInfo() const;
 };
 
 #endif  // RUNCLIAPPARGPARSER_H

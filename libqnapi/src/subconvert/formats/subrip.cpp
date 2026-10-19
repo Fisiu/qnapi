@@ -14,6 +14,8 @@
 
 #include "subrip.h"
 
+#include <QRegularExpression>
+
 bool SubRipSubtitleFormat::detect(const QStringList &lines) const {
   QStringList lines2 = lines;
   while (!lines2.isEmpty() && lines2.first().trimmed().isEmpty()) {
@@ -27,51 +29,54 @@ bool SubRipSubtitleFormat::detect(const QStringList &lines) const {
     firstEntryBuff += line + "\n";
   }
 
-  QRegExp r(
+  QRegularExpression r(
       "^(\\d+)(\\n|\\r\\n|\\s+)(\\d{2}):(\\d{2}):(\\d{2})\\,(\\d{3})\\s+\\-\\->"
-      "\\s+(\\d{2}):(\\d{2}):(\\d{2})\\,(\\d{3})(.*)");
+      "\\s+(\\d{2}):(\\d{2}):(\\d{2})\\,(\\d{3})(.*)\\z",
+      QRegularExpression::DotMatchesEverythingOption);
 
-  return r.exactMatch(firstEntryBuff);
+  return r.match(firstEntryBuff).hasMatch();
 }
 
 SubFile SubRipSubtitleFormat::decode(const QStringList &lines) const {
   SubFile sf;
 
-  QRegExp r1(
+  QRegularExpression r1(
       "^(\\d+)\\s+(\\d{2}):(\\d{2}):(\\d{2})\\,(\\d{3})\\s+\\-\\->\\s+(\\d{2}):"
-      "(\\d{2}):(\\d{2})\\,(\\d{3})(.*)");
-  QRegExp r2(
+      "(\\d{2}):(\\d{2})\\,(\\d{3})(.*)\\z");
+  QRegularExpression r2(
       "^(\\d{2}):(\\d{2}):(\\d{2})\\,(\\d{3})\\s+\\-\\->\\s+(\\d{2}):(\\d{2}):("
-      "\\d{2})\\,(\\d{3})(.*)");
-  QRegExp rNumLine("^\\d+");
+      "\\d{2})\\,(\\d{3})(.*)\\z");
+  QRegularExpression rNumLine("^\\d+\\z");
 
   QString tokensBuff = "", numsBuff;
   SrtTimestamps tss;
 
   foreach (QString line, lines) {
-    if (r1.exactMatch(line)) {
+    const auto match1 = r1.match(line);
+    const auto match2 = r2.match(line);
+    if (match1.hasMatch()) {
       if (!tokensBuff.isEmpty()) addEntry(sf.entries, tokensBuff, tss);
-      tss.h1 = r1.cap(2).toInt();
-      tss.m1 = r1.cap(3).toInt();
-      tss.s1 = r1.cap(4).toInt();
-      tss.ms1 = r1.cap(5).toInt();
-      tss.h2 = r1.cap(6).toInt();
-      tss.m2 = r1.cap(7).toInt();
-      tss.s2 = r1.cap(8).toInt();
-      tss.ms2 = r1.cap(9).toInt();
+      tss.h1 = match1.captured(2).toInt();
+      tss.m1 = match1.captured(3).toInt();
+      tss.s1 = match1.captured(4).toInt();
+      tss.ms1 = match1.captured(5).toInt();
+      tss.h2 = match1.captured(6).toInt();
+      tss.m2 = match1.captured(7).toInt();
+      tss.s2 = match1.captured(8).toInt();
+      tss.ms2 = match1.captured(9).toInt();
       numsBuff.clear();
-    } else if (r2.exactMatch(line)) {
+    } else if (match2.hasMatch()) {
       if (!tokensBuff.isEmpty()) addEntry(sf.entries, tokensBuff, tss);
-      tss.h1 = r2.cap(1).toInt();
-      tss.m1 = r2.cap(2).toInt();
-      tss.s1 = r2.cap(3).toInt();
-      tss.ms1 = r2.cap(4).toInt();
-      tss.h2 = r2.cap(5).toInt();
-      tss.m2 = r2.cap(6).toInt();
-      tss.s2 = r2.cap(7).toInt();
-      tss.ms2 = r2.cap(8).toInt();
+      tss.h1 = match2.captured(1).toInt();
+      tss.m1 = match2.captured(2).toInt();
+      tss.s1 = match2.captured(3).toInt();
+      tss.ms1 = match2.captured(4).toInt();
+      tss.h2 = match2.captured(5).toInt();
+      tss.m2 = match2.captured(6).toInt();
+      tss.s2 = match2.captured(7).toInt();
+      tss.ms2 = match2.captured(8).toInt();
       numsBuff.clear();
-    } else if (rNumLine.exactMatch(line)) {
+    } else if (rNumLine.match(line).hasMatch()) {
       numsBuff += line + "\n";
     } else if (!line.trimmed().isEmpty()) {
       if (!numsBuff.isEmpty()) {

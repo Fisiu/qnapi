@@ -15,14 +15,14 @@
 #ifndef MOVIEINFOPROVIDER_H
 #define MOVIEINFOPROVIDER_H
 
-#include <Maybe.h>
+#include <optional>
 #include <QString>
 #include "movieinfo/movieinfo.h"
 
 class MovieInfoProvider {
  public:
   virtual ~MovieInfoProvider() {}
-  virtual const Maybe<MovieInfo> getMovieInfo(
+  virtual const std::optional<MovieInfo> getMovieInfo(
       const QString& moviePath) const = 0;
 };
 

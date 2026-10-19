@@ -15,6 +15,7 @@
 #ifndef NAPIPROJEKTDOWNLOADENGINE_H
 #define NAPIPROJEKTDOWNLOADENGINE_H
 
+#include <optional>
 #include "config/engineconfig.h"
 #include "engines/subtitledownloadengine.h"
 #include "utils/p7zipdecoder.h"
@@ -48,7 +49,7 @@ class NapiProjektDownloadEngine : public SubtitleDownloadEngine {
   QSharedPointer<const P7ZipDecoder> p7zipDecoder;
 
   QString checksum(QString filename, bool limit10M);
-  Maybe<QString> downloadByLangAndChecksum(QString lang,
+  std::optional<QString> downloadByLangAndChecksum(QString lang,
                                            QString checksum) const;
   QString npFDigest(const QString& input) const;
   QString npLangWrapper(QString lang) const;

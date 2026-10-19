@@ -30,7 +30,6 @@ install:
   - appveyor-retry cinst 7zip.commandline -y -x86
   - 7z e -o"C:\Program Files (x86)\NSIS\Include" deps\ns-process\NsProcess.zip Include\*.nsh
   - 7z e -o"C:\Program Files (x86)\NSIS\Plugins" deps\ns-process\NsProcess.zip Plugin\*.dll
-  - git submodule update --init --recursive
 
 before_build:
   - set NSIS="C:\Program Files (x86)\NSIS"
